@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.7px Verdana; -webkit-text-stroke: #000000}
+    span.s1 {font-kerning: none}
+    span.s2 {font: 14.7px Arial; font-kerning: none}
+    span.s3 {font: 14.7px 'Apple Color Emoji'; font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="fr"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;meta charset="UTF-8" /&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;title&gt;Quiz sur les forces - eSCIENCES&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;!-- Google Font Poppins --&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&amp;display=swap" rel="stylesheet" /&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;!-- Chart.js --&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">  &lt;style&gt;</span></p>
+<p class="p1"><span class="s1">    :root {</span></p>
+<p class="p1"><span class="s1">      --bg: #fff;</span></p>
+<p class="p1"><span class="s1">      --fg: #333;</span></p>
+<p class="p1"><span class="s1">      --primary: #00A8E8;</span></p>
+<p class="p1"><span class="s1">      --primary-dark: #005F8A;</span></p>
+<p class="p1"><span class="s1">      --accent: #E91E63;</span></p>
+<p class="p1"><span class="s1">      --accent-dark: #A31545;</span></p>
+<p class="p1"><span class="s1">      --card-bg: #f9f9f9;</span></p>
+<p class="p1"><span class="s1">      --hover-light: #f0faff;</span></p>
+<p class="p1"><span class="s1">      --hover-dark: #444444;</span></p>
+<p class="p1"><span class="s1">      --correct-bg: #d4edda;</span></p>
+<p class="p1"><span class="s1">      --correct-border: #28a745;</span></p>
+<p class="p1"><span class="s1">      --wrong-bg: #f8d7da;</span></p>
+<p class="p1"><span class="s1">      --wrong-border: #dc3545;</span></p>
+<p class="p1"><span class="s1">    }</span></p>
+<p class="p1"><span class="s1">    *, *::before, *::after { box-sizing: border-box; }</span></p>
+<p class="p1"><span class="s1">    body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--fg); }</span></p>
+<p class="p1"><span class="s1">    .container { max-width: 600px; margin: 2rem auto; padding: 1rem; background: var(--card-bg); border-radius: 2rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }</span></p>
+<p class="p1"><span class="s1">    h1, h2, h3 { margin-bottom: 1rem; }</span></p>
+<p class="p1"><span class="s1">    input, button { font-size: 1rem; margin: .5rem 0; }</span></p>
+<p class="p1"><span class="s1">    input { width: 80%; max-width: 300px; padding: .5rem; border: 1px solid #ccc; border-radius: .5rem; }</span></p>
+<p class="p1"><span class="s1">    button { padding: .7rem 1.2rem; border: none; border-radius: 1rem; cursor: pointer; transition: background .2s; }</span></p>
+<p class="p1"><span class="s1">    .primary { background: var(--primary); color: #fff; }</span></p>
+<p class="p1"><span class="s1">    .primary:hover { background: var(--primary-dark); }</span></p>
+<p class="p1"><span class="s1">    .secondary { background: var(--accent); color: #fff; }</span></p>
+<p class="p1"><span class="s1">    .secondary:hover { background: var(--accent-dark); }</span></p>
+<p class="p1"><span class="s1">    .countdown { font-size: 6rem; margin: 3rem 0; animation: pop .5s ease-out both; }</span></p>
+<p class="p1"><span class="s1">    @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }</span></p>
+<p class="p1"><span class="s1">    .progress-bar { width: 100%; background: #e2e8f0; border-radius: .25rem; height: 12px; overflow: hidden; margin: 1rem 0; }</span></p>
+<p class="p1"><span class="s1">    .progress { background: var(--primary); height: 100%; width: 100%; transition: width .1s linear; }</span></p>
+<p class="p1"><span class="s1">    .question { padding: .8rem; margin: .5rem 0; border: 1px solid #ddd; border-radius: .5rem; cursor: pointer; text-align: left; background: var(--card-bg); transition: background .2s; }</span></p>
+<p class="p1"><span class="s1">    .question:hover { background: var(--hover-light); }</span></p>
+<p class="p1"><span class="s1">    .question.correct { border-color: var(--correct-border); background: var(--correct-bg); color: #000; }</span></p>
+<p class="p1"><span class="s1">    .question.wrong { border-color: var(--wrong-border); background: var(--wrong-bg); color: #000; }</span></p>
+<p class="p1"><span class="s1">    .summary-cards { display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 2rem; }</span></p>
+<p class="p1"><span class="s1">    .card { flex: 1; background: #fff; border-radius: 2rem; padding: 1rem; }</span></p>
+<p class="p1"><span class="s1">    .card h3 { margin: 0; font-size: 2.5rem; color: var(--primary); }</span></p>
+<p class="p1"><span class="s1">    .recap ul { list-style: none; padding: 0; }</span></p>
+<p class="p1"><span class="s1">    .recap li { padding: 1rem; margin-bottom: 1rem; border-radius: .75rem; background: var(--card-bg); text-align: left; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }</span></p>
+<p class="p1"><span class="s1">    .recap li.correct { border: 1px solid var(--correct-border); background: var(--correct-bg); }</span></p>
+<p class="p1"><span class="s1">    .recap li.wrong { border: 1px solid var(--wrong-border); background: var(--wrong-bg); }</span></p>
+<p class="p1"><span class="s1">    small { display: block; margin-top: 1rem; color: #666; }</span></p>
+<p class="p1"><span class="s1">  &lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;div class="container" id="app"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">  &lt;script&gt;</span></p>
+<p class="p1"><span class="s1">    (function() {</span></p>
+<p class="p1"><span class="s1">      let timerId;</span></p>
+<p class="p1"><span class="s1">      const QUESTIONS = [</span></p>
+<p class="p1"><span class="s1">        { text: "Quel est le nom de l’unité utilisée pour exprimer l’intensité d’une force ?", options: [</span></p>
+<p class="p1"><span class="s1">            { id: 'a', text: 'Le kilogramme' },</span></p>
+<p class="p1"><span class="s1">            { id: 'b', text: 'Le mètre' },</span></p>
+<p class="p1"><span class="s1">            { id: 'c', text: 'Le newton', correct: true },</span></p>
+<p class="p1"><span class="s1">            { id: 'd', text: 'Le volt' }</span></p>
+<p class="p1"><span class="s1">          ], explanation: 'L’unité SI de la force est le newton (N).' },</span></p>
+<p class="p1"><span class="s1">        { text: "Quand on parle de force, de quoi s'agit-il ?", options: [</span></p>
+<p class="p1"><span class="s1">            { id: 'a', text: 'Une action mécanique qui modifie un mouvement ou déforme un objet', correct: true },</span></p>
+<p class="p1"><span class="s1">            { id: 'b', text: 'La vitesse d’un objet en mouvement' },</span></p>
+<p class="p1"><span class="s1">            { id: 'c', text: 'Le poids d’unobjet' },</span></p>
+<p class="p1"><span class="s1">            { id: 'd', text: 'L’énergie contenue dans un objet' }</span></p>
+<p class="p1"><span class="s1">          ], explanation: 'Une force modifie le mouvement ou la forme d’un objet.' },</span></p>
+<p class="p1"><span class="s1">        { text: "Quel instrument mesure une force ?", options: [</span></p>
+<p class="p1"><span class="s1">            { id: 'a', text: 'Dynamomètre', correct: true },</span></p>
+<p class="p1"><span class="s1">            { id: 'b', text: 'Balance' },</span></p>
+<p class="p1"><span class="s1">            { id: 'c', text: 'Thermomètre' },</span></p>
+<p class="p1"><span class="s1">            { id: 'd', text: 'Baromètre' }</span></p>
+<p class="p1"><span class="s1">          ], explanation: 'Le dynamomètre mesure directement la force appliquée.' },</span></p>
+<p class="p1"><span class="s1">        { text: "Quelle est la formule mathématique de la force résultante sur un objet ?", options: [</span></p>
+<p class="p1"><span class="s1">            { id: 'a', text: 'F = m * a', correct: true },</span></p>
+<p class="p1"><span class="s1">            { id: 'b', text: 'F = m / a' },</span></p>
+<p class="p1"><span class="s1">            { id: 'c', text: 'F = a / m' },</span></p>
+<p class="p1"><span class="s1">            { id: 'd', text: 'F = m + a' }</span></p>
+<p class="p1"><span class="s1">          ], explanation: 'F = m × a (2</span><span class="s2">ᵉ</span><span class="s1"> loi de Newton).' },</span></p>
+<p class="p1"><span class="s1">        { text: "Quelle unité correspond à 1 N dans le système SI ?", options: [</span></p>
+<p class="p1"><span class="s1">            { id: 'a', text: '1 kg·m/s²', correct: true },</span></p>
+<p class="p1"><span class="s1">            { id: 'b', text: '1 kg/m²' },</span></p>
+<p class="p1"><span class="s1">            { id: 'c', text: '1 m/s' },</span></p>
+<p class="p1"><span class="s1">            { id: 'd', text: '1 J' }</span></p>
+<p class="p1"><span class="s1">          ], explanation: '1 N = 1 kg·m/s².' }</span></p>
+<p class="p1"><span class="s1">      ];</span></p>
+<p class="p1"><span class="s1">      let userName = '',</span></p>
+<p class="p1"><span class="s1">          questions = [],</span></p>
+<p class="p1"><span class="s1">          current = 0,</span></p>
+<p class="p1"><span class="s1">          totalScore = 0,</span></p>
+<p class="p1"><span class="s1">          totalTime = 0,</span></p>
+<p class="p1"><span class="s1">          answersDetail = [];</span></p>
+<p class="p1"><span class="s1">      const attempts = JSON.parse(localStorage.getItem('quizAttempts') || '[]');</span></p>
+<p class="p1"><span class="s1">      const app = document.getElementById('app');</span></p>
+<p class="p1"><span class="s1">      // Couleurs pour Chart.js</span></p>
+<p class="p1"><span class="s1">      const fgColor = getComputedStyle(document.documentElement).getPropertyValue('--fg').trim();</span></p>
+<p class="p1"><span class="s1">      const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      const correctMsgs = ['Bien joué !', 'Bravo !', 'Chapeau !'];</span></p>
+<p class="p1"><span class="s1">      const wrongMsgs = ['Oups...', 'Dommage !', 'Pas tout à fait...'];</span></p>
+<p class="p1"><span class="s1">      const randMsg = arr =&gt; arr[Math.floor(Math.random() * arr.length)];</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      function shuffle(arr) {</span></p>
+<p class="p1"><span class="s1">        const a = [...arr];</span></p>
+<p class="p1"><span class="s1">        for (let i = a.length - 1; i &gt; 0; i--) {</span></p>
+<p class="p1"><span class="s1">          const j = Math.floor(Math.random() * (i + 1));</span></p>
+<p class="p1"><span class="s1">          [a[i], a[j]] = [a[j], a[i]];</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        return a;</span></p>
+<p class="p1"><span class="s1">      }</span></p>
+<p class="p1"><span class="s1">      function saveAttempt() {</span></p>
+<p class="p1"><span class="s1">        attempts.push({ num: attempts.length + 1, score: totalScore });</span></p>
+<p class="p1"><span class="s1">        localStorage.setItem('quizAttempts', JSON.stringify(attempts));</span></p>
+<p class="p1"><span class="s1">      }</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      function renderStart() {</span></p>
+<p class="p1"><span class="s1">        app.innerHTML = `</span></p>
+<p class="p1"><span class="s1">          &lt;h1&gt;Quiz sur les forces&lt;/h1&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;input id="name-in" placeholder="Ton prénom" value="${userName}" /&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;button class="primary" id="start-btn"&gt;Démarrer&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1">          ${attempts.length ? `&lt;p&gt;Joué ${attempts.length} fois&lt;/p&gt;` : ''}</span></p>
+<p class="p1"><span class="s1">          &lt;small&gt;Créé par eSCIENCES avec beaucoup de passion et de café&lt;/small&gt;</span></p>
+<p class="p1"><span class="s1">        `;</span></p>
+<p class="p1"><span class="s1">        document.getElementById('start-btn').onclick = () =&gt; {</span></p>
+<p class="p1"><span class="s1">          const v = document.getElementById('name-in').value.trim();</span></p>
+<p class="p1"><span class="s1">          if (!v) return;</span></p>
+<p class="p1"><span class="s1">          userName = v;</span></p>
+<p class="p1"><span class="s1">          startCountdown();</span></p>
+<p class="p1"><span class="s1">        };</span></p>
+<p class="p1"><span class="s1">      }</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      function startCountdown() {</span></p>
+<p class="p1"><span class="s1">        questions = shuffle(QUESTIONS.map(q =&gt; ({ ...q, options: shuffle(q.options) })));</span></p>
+<p class="p1"><span class="s1">        current = 0;</span></p>
+<p class="p1"><span class="s1">        totalScore = 0;</span></p>
+<p class="p1"><span class="s1">        totalTime = 0;</span></p>
+<p class="p1"><span class="s1">        answersDetail = [];</span></p>
+<p class="p1"><span class="s1">        showCountdown(3);</span></p>
+<p class="p1"><span class="s1">      }</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      function showCountdown(n) {</span></p>
+<p class="p1"><span class="s1">        if (n &gt; 0) {</span></p>
+<p class="p1"><span class="s1">          app.innerHTML = `&lt;div class="countdown" data-value="${n}"&gt;${n}&lt;/div&gt;`;</span></p>
+<p class="p1"><span class="s1">          setTimeout(() =&gt; showCountdown(n - 1), 1000);</span></p>
+<p class="p1"><span class="s1">        } else {</span></p>
+<p class="p1"><span class="s1">          app.innerHTML = `&lt;div class="countdown"&gt;Go !&lt;/div&gt;`;</span></p>
+<p class="p1"><span class="s1">          setTimeout(renderQuiz, 1000);</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">      }</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      function renderQuiz() {</span></p>
+<p class="p1"><span class="s1">        const DURATION = 30;</span></p>
+<p class="p1"><span class="s1">        const startTime = performance.now();</span></p>
+<p class="p1"><span class="s1">        cancelAnimationFrame(timerId);</span></p>
+<p class="p1"><span class="s1">        app.innerHTML = `</span></p>
+<p class="p1"><span class="s1">          &lt;div class="progress-bar"&gt;&lt;div class="progress" id="bar"&gt;&lt;/div&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;h2&gt;${questions[current].text}&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;div id="opts"&gt;</span></p>
+<p class="p1"><span class="s1">            ${questions[current].options.map(o =&gt; `&lt;div class="question" data-id="${o.id}"&gt;${o.text}&lt;/div&gt;`).join('')}</span></p>
+<p class="p1"><span class="s1">          &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;div id="feedback"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">        `;</span></p>
+<p class="p1"><span class="s1">        document.querySelectorAll('.question').forEach(el =&gt; el.onclick = () =&gt; handleAnswer(el.dataset.id, startTime));</span></p>
+<p class="p1"><span class="s1">        (function tick() {</span></p>
+<p class="p1"><span class="s1">          const elapsed = (performance.now() - startTime) / 1000;</span></p>
+<p class="p1"><span class="s1">          const rem = Math.max(0, DURATION - elapsed);</span></p>
+<p class="p1"><span class="s1">          document.getElementById('bar').style.width = (rem / DURATION * 100) + '%';</span></p>
+<p class="p1"><span class="s1">          if (rem &gt; 0) timerId = requestAnimationFrame(tick);</span></p>
+<p class="p1"><span class="s1">        })();</span></p>
+<p class="p1"><span class="s1">      }</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      function handleAnswer(id, startTime) {</span></p>
+<p class="p1"><span class="s1">        cancelAnimationFrame(timerId);</span></p>
+<p class="p1"><span class="s1">        const DURATION = 30;</span></p>
+<p class="p1"><span class="s1">        const elapsed = (performance.now() - startTime) / 1000;</span></p>
+<p class="p1"><span class="s1">        totalTime += Math.min(elapsed, DURATION);</span></p>
+<p class="p1"><span class="s1">        const timeLeft = Math.max(0, DURATION - elapsed);</span></p>
+<p class="p1"><span class="s1">        const q = questions[current];</span></p>
+<p class="p1"><span class="s1">        const correctOpt = q.options.find(o =&gt; o.correct);</span></p>
+<p class="p1"><span class="s1">        const earned = id === correctOpt.id ? Math.floor(timeLeft / DURATION * 1000) : 0;</span></p>
+<p class="p1"><span class="s1">        totalScore += earned;</span></p>
+<p class="p1"><span class="s1">        answersDetail.push({ question: q.text, chosen: q.options.find(o =&gt; o.id === id)?.text || 'Aucune', correct: correctOpt.text, earned, explanation: q.explanation });</span></p>
+<p class="p1"><span class="s1">        document.querySelectorAll('.question').forEach(el =&gt; {</span></p>
+<p class="p1"><span class="s1">          if (el.dataset.id === correctOpt.id) el.classList.add('correct');</span></p>
+<p class="p1"><span class="s1">          if (el.dataset.id === id &amp;&amp; id !== correctOpt.id) el.classList.add('wrong');</span></p>
+<p class="p1"><span class="s1">        });</span></p>
+<p class="p1"><span class="s1">        const ok = id === correctOpt.id;</span></p>
+<p class="p1"><span class="s1">        const msg = ok ? randMsg(correctMsgs) : randMsg(wrongMsgs);</span></p>
+<p class="p1"><span class="s1">        document.getElementById('feedback').innerHTML = `&lt;p&gt;${ok ? '</span><span class="s3">✅</span><span class="s1">' : '</span><span class="s3">❌</span><span class="s1">'} ${msg} +${earned} pts&lt;/p&gt;&lt;button class="primary" id="next-btn"&gt;Suivant </span><span class="s2">→</span><span class="s1">&lt;/button&gt;`;</span></p>
+<p class="p1"><span class="s1">        document.getElementById('next-btn').onclick = () =&gt; {</span></p>
+<p class="p1"><span class="s1">          if (current + 1 &lt; questions.length) {</span></p>
+<p class="p1"><span class="s1">            current++;</span></p>
+<p class="p1"><span class="s1">            renderQuiz();</span></p>
+<p class="p1"><span class="s1">          } else {</span></p>
+<p class="p1"><span class="s1">            saveAttempt();</span></p>
+<p class="p1"><span class="s1">            renderSummary();</span></p>
+<p class="p1"><span class="s1">          }</span></p>
+<p class="p1"><span class="s1">        };</span></p>
+<p class="p1"><span class="s1">      }</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      function renderSummary() {</span></p>
+<p class="p1"><span class="s1">        const correctCount = answersDetail.filter(a =&gt; a.earned &gt; 0).length;</span></p>
+<p class="p1"><span class="s1">        const maxScore = QUESTIONS.length * 1000;</span></p>
+<p class="p1"><span class="s1">        const pct = Math.round(totalScore / maxScore * 100);</span></p>
+<p class="p1"><span class="s1">        app.innerHTML = `</span></p>
+<p class="p1"><span class="s1">          &lt;h2&gt;Résumé du Quiz&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;div class="summary-cards"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="card"&gt;&lt;h3&gt;${correctCount}&lt;/h3&gt;&lt;p&gt;Bonnes réponses&lt;/p&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="card"&gt;&lt;h3&gt;${pct}%&lt;/h3&gt;&lt;p&gt;Score final&lt;/p&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="card"&gt;&lt;h3&gt;${Math.round(totalTime)}&lt;/h3&gt;&lt;p&gt;Temps total&lt;/p&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;button class="primary" id="retry-btn"&gt;Rejouer&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;button class="secondary" id="video-btn"&gt;Regarder la vidéo </span><span class="s3">🎥</span><span class="s1">&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;h3&gt;Le récapitulatif de tes scores&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;canvas id="chart" style="margin-top:1rem;"&gt;&lt;/canvas&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;div class="recap"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;h3&gt;Détails des réponses&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;ul&gt;</span></p>
+<p class="p1"><span class="s1">              ${answersDetail.map((a, i) =&gt; `&lt;li class="${a.earned &gt; 0 ? 'correct' : 'wrong'}"&gt;&lt;strong&gt;${i+1}. ${a.question}&lt;/strong&gt;&lt;p&gt;Ta réponse : ${a.chosen}&lt;/p&gt;${a.earned === 0 ? `&lt;p&gt;Bonne réponse : ${a.correct}&lt;/p&gt;` : ''}&lt;p&gt;Points : ${a.earned}&lt;/p&gt;&lt;p&gt;&lt;em&gt;Explication : ${a.explanation}&lt;/em&gt;&lt;/p&gt;&lt;/li&gt;`).join('')}</span></p>
+<p class="p1"><span class="s1">            &lt;/ul&gt;</span></p>
+<p class="p1"><span class="s1">          &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">        `;</span></p>
+<p class="p1"><span class="s1">        const ctx = document.getElementById('chart').getContext('2d');</span></p>
+<p class="p1"><span class="s1">        new Chart(ctx, {</span></p>
+<p class="p1"><span class="s1">          type: 'line',</span></p>
+<p class="p1"><span class="s1">          data: {</span></p>
+<p class="p1"><span class="s1">            labels: attempts.map(a =&gt; a.num),</span></p>
+<p class="p1"><span class="s1">            datasets: [{ data: attempts.map(a =&gt; a.score), borderColor: primaryColor, fill: false, tension: 0.4, pointBackgroundColor: fgColor }]</span></p>
+<p class="p1"><span class="s1">          },</span></p>
+<p class="p1"><span class="s1">          options: {</span></p>
+<p class="p1"><span class="s1">            scales: {</span></p>
+<p class="p1"><span class="s1">              x: { grid: { display: true, color: 'rgba(0,0,0,0.2)' }, title: { display: true, text: 'Parties jouées' } },</span></p>
+<p class="p1"><span class="s1">              y: { beginAtZero: true, max: maxScore, grid: { display: true, color: 'rgba(0,0,0,0.2)' } }</span></p>
+<p class="p1"><span class="s1">            },</span></p>
+<p class="p1"><span class="s1">            plugins: { legend: { display: false } }</span></p>
+<p class="p1"><span class="s1">          }</span></p>
+<p class="p1"><span class="s1">        });</span></p>
+<p class="p1"><span class="s1">        document.getElementById('retry-btn').onclick = startCountdown;</span></p>
+<p class="p1"><span class="s1">        document.getElementById('video-btn').onclick = () =&gt; window.open('https://youtu.be/dQw4w9WgXcQ', '_blank');</span></p>
+<p class="p1"><span class="s1">      }</span></p>
+<p class="p1"><span class="s1"> </span></p>
+<p class="p1"><span class="s1">      renderStart();</span></p>
+<p class="p1"><span class="s1">    })();</span></p>
+<p class="p1"><span class="s1">  &lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+<p class="p1"><span class="s1"> </span></p>
+</body>
+</html>
