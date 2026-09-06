@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'atelier du prompt</title>
+<meta name="description" content="Un parcours interactif pour apprendre à transformer une demande vague en consigne utile pour une IA générative.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#contenu-principal">Aller au contenu principal</a>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <p class="site-header__eyebrow">Formation IA générative — enseignants</p>
+    <h1 class="site-header__title">L'atelier du prompt</h1>
+    <p class="site-header__subtitle">Transformer une demande vague en consigne utile pour une IA</p>
+  </div>
+</header>
+
+<nav class="stepper" aria-label="Progression dans l'atelier">
+  <ol class="stepper__list" id="stepper-list">
+    <li class="stepper__item">
+      <button type="button" class="stepper__button" data-goto="1" aria-current="step">
+        <span class="stepper__number">1</span>
+        <span class="stepper__label">Accueil</span>
+      </button>
+    </li>
+    <li class="stepper__item">
+      <button type="button" class="stepper__button" data-goto="2">
+        <span class="stepper__number">2</span>
+        <span class="stepper__label">Observer</span>
+      </button>
+    </li>
+    <li class="stepper__item">
+      <button type="button" class="stepper__button" data-goto="3">
+        <span class="stepper__number">3</span>
+        <span class="stepper__label">Construire</span>
+      </button>
+    </li>
+    <li class="stepper__item">
+      <button type="button" class="stepper__button" data-goto="4">
+        <span class="stepper__number">4</span>
+        <span class="stepper__label">Défi</span>
+      </button>
+    </li>
+    <li class="stepper__item">
+      <button type="button" class="stepper__button" data-goto="5">
+        <span class="stepper__number">5</span>
+        <span class="stepper__label">Réutiliser</span>
+      </button>
+    </li>
+  </ol>
+  <div class="stepper__progress-track" aria-hidden="true">
+    <div class="stepper__progress-fill" id="progress-fill"></div>
+  </div>
+</nav>
+
+<main id="contenu-principal">
+
+  <!-- ============================================================ -->
+  <!-- ÉTAPE 1 — ACCUEIL ET DÉFI                                     -->
+  <!-- ============================================================ -->
+  <section class="step" id="step-1" data-step="1" aria-labelledby="step-1-title">
+    <div class="step__inner">
+      <h2 id="step-1-title">Bienvenue dans l'atelier</h2>
+      <p class="lead">Une intelligence artificielle générative répond à ce qu'elle comprend de votre demande. Plus votre intention est claire, plus la réponse a des chances d'être utile pour votre classe.</p>
+
+      <div class="callout callout--warning" role="note">
+        <span class="callout__icon" aria-hidden="true">⚠️</span>
+        <p><strong>Important :</strong> une réponse bien formulée n'est pas forcément exacte. Vérifiez toujours les informations, les sources et l'adéquation pédagogique avant de l'utiliser avec vos élèves.</p>
+      </div>
+
+      <h3 class="section-title">La méthode en un coup d'œil</h3>
+      <p>Tout au long de cet atelier, vous allez découvrir une manière simple d'organiser une demande : la méthode <strong>O-C-R-C-F</strong>. Ce n'est pas une formule magique, juste un aide-mémoire.</p>
+
+      <ol class="ocrcf-chain" aria-label="Les cinq composantes de la méthode O-C-R-C-F">
+        <li class="ocrcf-chain__item">
+          <span class="ocrcf-chain__letter">O</span>
+          <span class="ocrcf-chain__word">Objectif</span>
+          <span class="ocrcf-chain__question">Que veux-je obtenir ?</span>
+        </li>
+        <li class="ocrcf-chain__item">
+          <span class="ocrcf-chain__letter">C</span>
+          <span class="ocrcf-chain__word">Contexte</span>
+          <span class="ocrcf-chain__question">Que doit savoir l'IA ?</span>
+        </li>
+        <li class="ocrcf-chain__item">
+          <span class="ocrcf-chain__letter">R</span>
+          <span class="ocrcf-chain__word">Rôle</span>
+          <span class="ocrcf-chain__question">Quelle posture lui donner ?</span>
+        </li>
+        <li class="ocrcf-chain__item">
+          <span class="ocrcf-chain__letter">C</span>
+          <span class="ocrcf-chain__word">Contraintes</span>
+          <span class="ocrcf-chain__question">Quelles limites préciser ?</span>
+        </li>
+        <li class="ocrcf-chain__item">
+          <span class="ocrcf-chain__letter">F</span>
+          <span class="ocrcf-chain__word">Format</span>
+          <span class="ocrcf-chain__question">Sous quelle forme ?</span>
+        </li>
+      </ol>
+      <p class="muted small">Vous mettrez cette méthode en pratique pas à pas, aux étapes suivantes.</p>
+
+      <fieldset class="situation-picker">
+        <legend class="section-title">Dans quel contexte souhaitez-vous utiliser une IA aujourd'hui ?</legend>
+        <p class="muted small">Ce choix n'est pas obligatoire : il sert juste à personnaliser quelques exemples plus loin.</p>
+        <div class="situation-picker__grid" id="situation-grid" role="radiogroup" aria-label="Contexte d'utilisation">
+          <button type="button" class="situation-card" data-situation="preparer" role="radio" aria-checked="false">
+            <span class="situation-card__icon" aria-hidden="true">🧑‍🏫</span>
+            <span>Préparer une activité</span>
+          </button>
+          <button type="button" class="situation-card" data-situation="differencier" role="radio" aria-checked="false">
+            <span class="situation-card__icon" aria-hidden="true">🧩</span>
+            <span>Différencier un support</span>
+          </button>
+          <button type="button" class="situation-card" data-situation="evaluation" role="radio" aria-checked="false">
+            <span class="situation-card__icon" aria-hidden="true">📝</span>
+            <span>Créer une évaluation</span>
+          </button>
+          <button type="button" class="situation-card" data-situation="reformuler" role="radio" aria-checked="false">
+            <span class="situation-card__icon" aria-hidden="true">✂️</span>
+            <span>Résumer ou reformuler un texte</span>
+          </button>
+          <button type="button" class="situation-card" data-situation="communiquer" role="radio" aria-checked="false">
+            <span class="situation-card__icon" aria-hidden="true">💬</span>
+            <span>Communiquer avec les élèves ou les parents</span>
+          </button>
+          <button type="button" class="situation-card" data-situation="autre" role="radio" aria-checked="false">
+            <span class="situation-card__icon" aria-hidden="true">🔍</span>
+            <span>Autre situation</span>
+          </button>
+        </div>
+      </fieldset>
+
+      <div class="step__actions step__actions--start">
+        <button type="button" class="btn btn--primary btn--large" id="btn-start">Commencer l'atelier →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ÉTAPE 2 — OBSERVER UNE DEMANDE VAGUE                          -->
+  <!-- ============================================================ -->
+  <section class="step" id="step-2" data-step="2" hidden aria-labelledby="step-2-title">
+    <div class="step__inner">
+      <h2 id="step-2-title">Observer une demande vague</h2>
+      <p class="lead">Voici une consigne telle qu'un collègue pourrait la taper rapidement dans une IA :</p>
+
+      <blockquote class="prompt-sample">« Fais-moi une activité sur le climat. »</blockquote>
+
+      <p>Et voici, à titre d'exemple, le genre de réponse générale que l'on obtient souvent :</p>
+
+      <div class="ai-bubble" aria-label="Exemple de réponse simulée d'une IA">
+        <p class="ai-bubble__tag">Réponse simulée — pas une vraie IA</p>
+        <p>Voici une activité sur le climat :</p>
+        <ol>
+          <li>Introduction : expliquer ce qu'est le climat et le différencier de la météo.</li>
+          <li>Discussion : demander aux élèves ce qu'ils savent déjà du changement climatique.</li>
+          <li>Activité : les élèves réalisent une affiche ou un exposé sur le sujet.</li>
+          <li>Conclusion : synthèse collective en groupe classe.</li>
+        </ol>
+        <p>Cette activité peut être adaptée selon le niveau des élèves et le temps disponible.</p>
+      </div>
+
+      <fieldset class="missing-picker">
+        <legend class="section-title">D'après vous, qu'est-ce qui manque à cette demande ?</legend>
+        <p class="muted small">Cochez les éléments qui vous semblent absents. Un petit commentaire s'affichera à chaque fois.</p>
+
+        <div class="missing-item">
+          <label class="missing-item__label">
+            <input type="checkbox" class="missing-checkbox" data-missing="niveau">
+            <span>Le niveau scolaire</span>
+          </label>
+          <p class="missing-item__hint" data-hint-for="niveau" hidden>Sans niveau précisé, l'IA propose une activité « passe-partout », parfois trop simple ou trop complexe pour votre classe.</p>
+        </div>
+
+        <div class="missing-item">
+          <label class="missing-item__label">
+            <input type="checkbox" class="missing-checkbox" data-missing="duree">
+            <span>La durée</span>
+          </label>
+          <p class="missing-item__hint" data-hint-for="duree" hidden>Sans indication de durée, difficile de savoir si l'activité tient en 50 minutes ou nécessite deux séances.</p>
+        </div>
+
+        <div class="missing-item">
+          <label class="missing-item__label">
+            <input type="checkbox" class="missing-checkbox" data-missing="objectifs">
+            <span>Les objectifs d'apprentissage</span>
+          </label>
+          <p class="missing-item__hint" data-hint-for="objectifs" hidden>Sans objectif clair, l'activité risque de rester superficielle ou de ne viser aucune compétence précise.</p>
+        </div>
+
+        <div class="missing-item">
+          <label class="missing-item__label">
+            <input type="checkbox" class="missing-checkbox" data-missing="contexte">
+            <span>Le contexte de classe</span>
+          </label>
+          <p class="missing-item__hint" data-hint-for="contexte" hidden>Le nombre d'élèves, leur profil ou le matériel disponible influencent fortement ce qui est réalisable en classe.</p>
+        </div>
+
+        <div class="missing-item">
+          <label class="missing-item__label">
+            <input type="checkbox" class="missing-checkbox" data-missing="contraintes">
+            <span>Des contraintes</span>
+          </label>
+          <p class="missing-item__hint" data-hint-for="contraintes" hidden>Sans contraintes (matériel, vocabulaire, démarche), la proposition peut être difficile à mettre en œuvre telle quelle.</p>
+        </div>
+
+        <div class="missing-item">
+          <label class="missing-item__label">
+            <input type="checkbox" class="missing-checkbox" data-missing="format">
+            <span>Le format souhaité</span>
+          </label>
+          <p class="missing-item__hint" data-hint-for="format" hidden>Sans format précisé, vous recevez souvent un texte continu là où un tableau ou une liste d'étapes serait plus pratique.</p>
+        </div>
+      </fieldset>
+
+      <div class="callout callout--info" role="note">
+        <span class="callout__icon" aria-hidden="true">💡</span>
+        <p>Il n'existe pas une seule bonne formulation : plusieurs demandes différentes peuvent donner de bons résultats. L'objectif est d'ajouter les précisions qui comptent réellement pour vous.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ÉTAPE 3 — CONSTRUIRE UN PROMPT PAS À PAS                      -->
+  <!-- ============================================================ -->
+  <section class="step" id="step-3" data-step="3" hidden aria-labelledby="step-3-title">
+    <div class="step__inner">
+      <div class="step__header-row">
+        <div>
+          <h2 id="step-3-title">Construire un prompt, pas à pas</h2>
+          <p class="lead">Complétez les cinq sections ci-dessous. Inspirez-vous des exemples ou écrivez directement ce qui vous vient à l'esprit.</p>
+        </div>
+        <button type="button" class="btn btn--ghost" id="btn-fill-example">Exemple complété</button>
+      </div>
+
+      <div class="builder-layout">
+        <div class="builder-fields">
+
+          <fieldset class="ocrcf-card" data-letter="O">
+            <legend><span class="ocrcf-card__badge">O</span> Objectif</legend>
+            <label class="ocrcf-card__question" for="field-objectif">Que voulez-vous que l'IA produise ou vous aide à faire ?</label>
+            <textarea id="field-objectif" class="ocrcf-card__textarea" rows="2" placeholder="Ex. : proposer une activité d'introduction sur le changement climatique."></textarea>
+            <p class="ocrcf-card__example"><strong>Exemple :</strong> « Proposer une activité d'introduction sur le changement climatique. »</p>
+            <details class="ocrcf-card__help">
+              <summary>Besoin d'une idée ?</summary>
+              <div class="chip-group" data-chips-for="field-objectif">
+                <button type="button" class="chip">Créer un questionnaire de compréhension sur un texte.</button>
+                <button type="button" class="chip">Adapter un document pour des élèves ayant besoin d'un langage plus accessible.</button>
+                <button type="button" class="chip">Construire une grille d'évaluation pour une production orale.</button>
+                <button type="button" class="chip">Rédiger un courriel clair et bienveillant destiné à des parents.</button>
+              </div>
+            </details>
+          </fieldset>
+
+          <fieldset class="ocrcf-card" data-letter="C1">
+            <legend><span class="ocrcf-card__badge">C</span> Contexte</legend>
+            <label class="ocrcf-card__question" for="field-contexte">Pour qui, dans quel cadre et avec quelles informations ?</label>
+            <textarea id="field-contexte" class="ocrcf-card__textarea" rows="2" placeholder="Ex. : pour des élèves de 2e secondaire, en sciences, avec une classe de 24 élèves."></textarea>
+            <p class="ocrcf-card__example"><strong>Exemple :</strong> « Pour des élèves de 2e secondaire, en sciences, avec une classe de 24 élèves. »</p>
+            <details class="ocrcf-card__help">
+              <summary>Besoin d'une idée ?</summary>
+              <div class="chip-group" data-chips-for="field-contexte">
+                <button type="button" class="chip">Classe de 6e primaire, 22 élèves, cours de français.</button>
+                <button type="button" class="chip">Groupe hétérogène avec quelques élèves à besoins spécifiques.</button>
+                <button type="button" class="chip">Notion déjà vue au cours précédent : à réactiver brièvement.</button>
+              </div>
+            </details>
+          </fieldset>
+
+          <fieldset class="ocrcf-card" data-letter="R">
+            <legend><span class="ocrcf-card__badge">R</span> Rôle</legend>
+            <label class="ocrcf-card__question" for="field-role">Quelle posture souhaitez-vous donner à l'IA ?</label>
+            <textarea id="field-role" class="ocrcf-card__textarea" rows="2" placeholder="Ex. : agis comme un conseiller pédagogique en sciences."></textarea>
+            <p class="ocrcf-card__example"><strong>Exemple :</strong> « Agis comme un conseiller pédagogique en sciences. »</p>
+            <details class="ocrcf-card__help">
+              <summary>Besoin d'une idée ?</summary>
+              <div class="chip-group" data-chips-for="field-role">
+                <button type="button" class="chip">Agis comme un instituteur expérimenté en langue française.</button>
+                <button type="button" class="chip">Agis comme un professeur de mathématiques habitué à la différenciation.</button>
+                <button type="button" class="chip">Adopte le ton d'une direction d'école qui écrit aux parents.</button>
+              </div>
+            </details>
+          </fieldset>
+
+          <fieldset class="ocrcf-card" data-letter="C2">
+            <legend><span class="ocrcf-card__badge">C</span> Contraintes</legend>
+            <label class="ocrcf-card__question" for="field-contraintes">Quelles conditions doivent être respectées ?</label>
+            <textarea id="field-contraintes" class="ocrcf-card__textarea" rows="2" placeholder="Ex. : prévoir 50 minutes, peu de matériel, une démarche active et un vocabulaire accessible."></textarea>
+            <p class="ocrcf-card__example"><strong>Exemple :</strong> « Prévoir 50 minutes, peu de matériel, une démarche active et un vocabulaire accessible. »</p>
+            <details class="ocrcf-card__help">
+              <summary>Besoin d'une idée ?</summary>
+              <div class="chip-group" data-chips-for="field-contraintes">
+                <button type="button" class="chip">Maximum 5 questions, niveau de langue simple.</button>
+                <button type="button" class="chip">Sans matériel numérique, en sous-groupes de deux.</button>
+                <button type="button" class="chip">Ton bienveillant, pas plus de 15 lignes.</button>
+              </div>
+            </details>
+          </fieldset>
+
+          <fieldset class="ocrcf-card" data-letter="F">
+            <legend><span class="ocrcf-card__badge">F</span> Format</legend>
+            <label class="ocrcf-card__question" for="field-format">Sous quelle forme souhaitez-vous recevoir la réponse ?</label>
+            <textarea id="field-format" class="ocrcf-card__textarea" rows="2" placeholder="Ex. : présente la proposition sous la forme d'un tableau avec les étapes, la durée, le matériel et les consignes élèves."></textarea>
+            <p class="ocrcf-card__example"><strong>Exemple :</strong> « Présente la proposition sous la forme d'un tableau avec les étapes, la durée, le matériel et les consignes élèves. »</p>
+            <details class="ocrcf-card__help">
+              <summary>Besoin d'une idée ?</summary>
+              <div class="chip-group" data-chips-for="field-format">
+                <button type="button" class="chip">Sous la forme d'une liste à puces courte.</button>
+                <button type="button" class="chip">Sous la forme d'un questionnaire numéroté.</button>
+                <button type="button" class="chip">Sous la forme d'un tableau avec une colonne « points ».</button>
+              </div>
+            </details>
+          </fieldset>
+
+        </div>
+
+        <aside class="builder-preview" aria-labelledby="preview-title">
+          <h3 id="preview-title" class="section-title">Aperçu de votre prompt</h3>
+          <div class="builder-preview__box" id="live-preview" aria-live="polite">
+            <p class="muted small">Votre prompt apparaîtra ici au fur et à mesure que vous complétez les sections.</p>
+          </div>
+          <button type="button" class="btn btn--primary" id="btn-generate">Générer mon prompt complet</button>
+
+          <div class="builder-final">
+            <label for="field-final-prompt" class="section-title section-title--small">Votre prompt final (modifiable)</label>
+            <textarea id="field-final-prompt" rows="8" placeholder="Cliquez sur « Générer mon prompt complet » pour commencer, puis modifiez-le librement."></textarea>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ÉTAPE 4 — DÉFI : AMÉLIORER UN PROMPT                          -->
+  <!-- ============================================================ -->
+  <section class="step" id="step-4" data-step="4" hidden aria-labelledby="step-4-title">
+    <div class="step__inner">
+      <h2 id="step-4-title">Défi : améliorer un prompt</h2>
+      <p class="lead">Choisissez un défi. Vous allez transformer une demande vague en consigne plus précise, avec ce que vous venez de découvrir.</p>
+
+      <div class="challenge-picker" id="challenge-picker" role="radiogroup" aria-label="Choix du défi">
+        <button type="button" class="challenge-card" data-challenge="1" role="radio" aria-checked="false">
+          <span class="challenge-card__number">Défi 1</span>
+          <span class="challenge-card__prompt">« Prépare une interrogation sur les fractions. »</span>
+        </button>
+        <button type="button" class="challenge-card" data-challenge="2" role="radio" aria-checked="false">
+          <span class="challenge-card__number">Défi 2</span>
+          <span class="challenge-card__prompt">« Explique la photosynthèse à mes élèves. »</span>
+        </button>
+        <button type="button" class="challenge-card" data-challenge="3" role="radio" aria-checked="false">
+          <span class="challenge-card__number">Défi 3</span>
+          <span class="challenge-card__prompt">« Fais une activité pour travailler l'orthographe. »</span>
+        </button>
+      </div>
+
+      <div class="challenge-workspace" id="challenge-workspace" hidden>
+        <p>Demande de départ : <blockquote class="prompt-sample prompt-sample--inline" id="challenge-original"></blockquote></p>
+
+        <label for="field-challenge-answer" class="section-title section-title--small">Votre version améliorée</label>
+        <textarea id="field-challenge-answer" rows="6" placeholder="Réécrivez la demande en y ajoutant ce qui manque : objectif, contexte, rôle, contraintes, format…"></textarea>
+
+        <div class="challenge-workspace__actions">
+          <button type="button" class="btn btn--primary" id="btn-analyze">Analyser mon prompt</button>
+          <button type="button" class="btn btn--ghost" id="btn-toggle-piste">Afficher une piste d'amélioration</button>
+        </div>
+
+        <div class="analysis-result" id="analysis-result" aria-live="polite" hidden></div>
+
+        <div class="piste-box" id="piste-box" hidden>
+          <p class="piste-box__label">Une piste d'amélioration possible (pas la seule bonne réponse) :</p>
+          <p id="piste-text"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ÉTAPE 5 — RÉUTILISER ET GARDER UN REGARD CRITIQUE             -->
+  <!-- ============================================================ -->
+  <section class="step" id="step-5" data-step="5" hidden aria-labelledby="step-5-title">
+    <div class="step__inner">
+      <h2 id="step-5-title">Réutiliser et garder un regard critique</h2>
+
+      <div id="final-prompt-wrapper">
+        <label for="field-final-display" class="section-title section-title--small">Votre prompt final</label>
+        <textarea id="field-final-display" rows="8" readonly></textarea>
+
+        <div class="final-actions">
+          <button type="button" class="btn btn--primary" id="btn-copy">Copier le prompt</button>
+          <button type="button" class="btn btn--secondary" id="btn-download">Télécharger (.txt)</button>
+          <button type="button" class="btn btn--ghost" id="btn-restart">Recommencer</button>
+        </div>
+        <p class="copy-feedback" id="copy-feedback" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="checklist-box">
+        <h3 class="section-title">Avant d'utiliser la réponse de l'IA</h3>
+        <ul class="checklist">
+          <li>
+            <label><input type="checkbox" class="checklist-item" data-check="relire"> Je relis et j'adapte la réponse à mes élèves et à mon contexte.</label>
+          </li>
+          <li>
+            <label><input type="checkbox" class="checklist-item" data-check="verifier"> Je vérifie les faits, les dates, les sources et les éventuelles erreurs.</label>
+          </li>
+          <li>
+            <label><input type="checkbox" class="checklist-item" data-check="donnees"> Je protège les données personnelles : je ne transmets pas d'informations identifiantes sur mes élèves.</label>
+          </li>
+          <li>
+            <label><input type="checkbox" class="checklist-item" data-check="regles"> Je respecte les règles de mon établissement et les droits d'auteur.</label>
+          </li>
+          <li>
+            <label><input type="checkbox" class="checklist-item" data-check="responsabilite"> Je reste responsable de la décision pédagogique finale.</label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="callout callout--success" role="note">
+        <span class="callout__icon" aria-hidden="true">🌱</span>
+        <p>Un prompt utile est une conversation préparée : on précise son intention, puis on ajuste après avoir lu la réponse.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="bottom-nav">
+  <button type="button" class="btn btn--secondary" id="btn-prev">← Précédent</button>
+  <span class="bottom-nav__status" id="bottom-nav-status">Étape 1 sur 5</span>
+  <button type="button" class="btn btn--primary" id="btn-next">Suivant →</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
