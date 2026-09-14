@@ -331,6 +331,12 @@
             <textarea id="field-final-prompt" rows="8" placeholder="Cliquez sur « Structurer en Markdown » pour commencer, puis modifiez-le librement."></textarea>
           </div>
 
+          <div class="step__actions">
+            <button type="button" class="btn btn--ghost" id="btn-analyze-step3">Analyser mon prompt</button>
+            <p class="muted small">Cette même grille d'analyse vous resservira au défi et à la dernière étape.</p>
+          </div>
+          <div class="ocrcf-analysis-box" id="step3-analysis-result" aria-live="polite" hidden></div>
+
           <div class="markdown-info callout callout--info" role="note">
             <span class="callout__icon" aria-hidden="true">✍️</span>
             <div>
@@ -354,7 +360,7 @@
   <section class="step" id="step-4" data-step="4" hidden aria-labelledby="step-4-title">
     <div class="step__inner">
       <h2 id="step-4-title">Défi : améliorer un prompt</h2>
-      <p class="lead">Choisissez un défi. Vous allez transformer une demande vague en consigne plus précise, avec ce que vous venez de découvrir.</p>
+      <p class="lead">Vous avez déjà testé la grille d'analyse O-C-R-C-F à l'étape « Construire », sur votre propre prompt. Choisissez un défi pour vous entraîner à la repérer dans une demande vague écrite par quelqu'un d'autre.</p>
 
       <div class="challenge-picker" id="challenge-picker" role="radiogroup" aria-label="Choix du défi">
         <button type="button" class="challenge-card" data-challenge="1" role="radio" aria-checked="false">
@@ -382,7 +388,7 @@
           <button type="button" class="btn btn--ghost" id="btn-toggle-piste">Afficher une piste d'amélioration</button>
         </div>
 
-        <div class="analysis-result" id="analysis-result" aria-live="polite" hidden></div>
+        <div class="ocrcf-analysis-box" id="analysis-result" aria-live="polite" hidden></div>
 
         <div class="piste-box" id="piste-box" hidden>
           <p class="piste-box__label">Une piste d'amélioration possible (pas la seule bonne réponse) :</p>
@@ -402,6 +408,14 @@
       <div id="final-prompt-wrapper">
         <label for="field-final-display" class="section-title section-title--small">Votre prompt final</label>
         <textarea id="field-final-display" rows="8" readonly></textarea>
+
+        <p class="muted small markdown-preview-label" id="markdown-preview-label" hidden>Aperçu mis en forme (le Markdown ci-dessus, tel qu'une IA le rendrait) :</p>
+        <div class="markdown-preview" id="final-markdown-preview" hidden></div>
+
+        <div class="step__actions">
+          <button type="button" class="btn btn--ghost" id="btn-analyze-step5">Analyser mon prompt</button>
+        </div>
+        <div class="ocrcf-analysis-box" id="step5-analysis-result" aria-live="polite" hidden></div>
 
         <div class="final-actions">
           <button type="button" class="btn btn--primary" id="btn-copy">Copier le prompt</button>

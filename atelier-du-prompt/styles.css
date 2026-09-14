@@ -533,6 +533,54 @@ code {
 }
 .piste-box__label { font-weight: 700; margin: 0 0 0.5rem; color: var(--color-navy); }
 
+/* ---------- Grille d'analyse O-C-R-C-F (étapes 3, 4 et 5) ---------- */
+.ocrcf-analysis-box {
+  background: #eef7f0;
+  border: 1px solid #c3ddc9;
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.ocrcf-analysis-box p:first-child { margin-top: 0; }
+.ocrcf-analysis-list {
+  list-style: none;
+  margin: 0.5rem 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.ocrcf-analysis-list li { display: flex; gap: 0.7rem; align-items: flex-start; }
+.ocrcf-analysis-list__badge {
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--color-muted);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.ocrcf-analysis-list li.found .ocrcf-analysis-list__badge { background: var(--color-forest); }
+.ocrcf-analysis-list strong { color: var(--color-navy); }
+
+/* ---------- Aperçu mis en forme du Markdown (étape 5) ---------- */
+.markdown-preview-label { margin: 0.9rem 0 0.3rem; }
+.markdown-preview {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.2rem;
+  margin: 0;
+}
+.markdown-preview h4 { margin: 0.9rem 0 0.3rem; color: var(--color-navy); font-size: 1rem; }
+.markdown-preview h4:first-child { margin-top: 0; }
+.markdown-preview p { margin: 0.4rem 0; }
+.markdown-preview ul { margin: 0.4rem 0; padding-left: 1.3rem; }
+.markdown-preview li { margin-bottom: 0.25rem; }
+
 /* ---------- Étape 5 : réutiliser ---------- */
 #field-final-display {
   width: 100%;

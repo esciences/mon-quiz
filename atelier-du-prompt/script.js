@@ -415,12 +415,14 @@
     state.finalPrompt = finalField.value;
     state.finalPromptGenerated = true;
     saveState();
+    $("#step3-analysis-result").hidden = true;
     finalField.focus();
   });
 
   $("#field-final-prompt").addEventListener("input", (e) => {
     state.finalPrompt = e.target.value;
     saveState();
+    $("#step3-analysis-result").hidden = true;
   });
 
   $("#btn-fill-example").addEventListener("click", async () => {
@@ -502,6 +504,7 @@
     if (!state.challengeSelected) return;
     state.challengeAnswers[state.challengeSelected] = e.target.value;
     saveState();
+    $("#analysis-result").hidden = true;
   });
 
   $("#btn-toggle-piste").addEventListener("click", () => {
@@ -511,97 +514,121 @@
     saveState();
   });
 
-  /* --- Analyse locale du prompt (aucun appel réseau, aucune IA) --- */
+  /* --- Analyse locale du prompt (aucun appel réseau, aucune IA) ---
+     Grille partagée, réutilisée telle quelle aux étapes 3 (Construire),
+     4 (Défi) et 5 (Réutiliser) : les cinq catégories reprennent exactement
+     la méthode O-C-R-C-F enseignée à l'étape 1, pour que l'outil reste le
+     même d'un bout à l'autre du parcours. */
 
-  function analyzePrompt(text) {
-    const lower = text.toLowerCase();
-    const wordCount = text.trim().length ? text.trim().split(/\s+/).length : 0;
+  const ACTION_VERBS = /(crée|créer|créez|propose|proposer|proposez|rédige|rédiger|rédigez|prépare|préparer|préparez|explique|expliquer|expliquez|adapte|adapter|adaptez|résume|résumer|résumez|construis|construire|construisez|imagine|imaginer|imaginez|génère|générer|générez|fais|faire|faites|donne|donner|donnez|écris|écrire|écrivez)/i;
+  const ROLE_CUES = /(agis comme|en tant qu[e']|tu es un\b|tu es une\b|adopte le rôle|adopte le ton|joue le rôle|incarne|dans le rôle de|endosse le rôle)/i;
+  const FORMAT_CUES = /(\btableau\b|liste à puces|liste numérotée|\bliste\b|questionnaire|\bgrille\b|\bfiche\b|\brésumé\b|présentation|paragraphe court|\bplan\b|schéma|carte mentale|diapositive|sous (la )?forme (d'|de ))/i;
+  const NIVEAU_CUES = /(maternelle|primaire|secondaire|degré|1re année|première année|deuxième année|troisième année|\b[1-6]e\b|\d{1,2}\s*ans\b)/i;
+  const CLASSE_CUES = /(classe de \d+|\d{1,2}\s*élèves|effectif|profil (des|de la)|besoins spécifiques|groupe hétérogène|primo-arrivant)/i;
+  const DUREE_CUES = /(\d+\s?(min|minute|minutes|heure|heures|h)\b)|(\b(une|un|deux|trois|quatre|cinq|dix|quinze|vingt|trente|quarante|cinquante|soixante)\s+(minutes?|heures?)\b)/i;
+  const CONTRAINTE_CUES = /(\bcontrainte)|(maximum \d)|(minimum \d)|(pas plus de)|(au moins)|(au maximum)|(nombre de (mots|pages|questions|lignes))|(sans (matériel|ordinateur|numérique))|(vocabulaire (simple|accessible|adapté))|(doit (respecter|contenir|comporter|comprendre))/i;
 
-    const checks = {
-      niveau: /(maternelle|primaire|secondaire|degré|1re|2e|3e|4e|5e|6e|première|deuxième|troisième|\bans\b)/i.test(lower),
-      duree: /(\d+\s?(min|minute|minutes|heure|heures|h)\b)/i.test(lower),
-      role: /(agis comme|en tant que|tu es un|tu es une|adopte le rôle|adopte le ton|joue le rôle)/i.test(lower),
-      format: /(tableau|liste|questionnaire|grille|fiche|résumé|présentation|paragraphe|plan|tableau récapitulatif|puces)/i.test(lower),
-      contraintes: /(contrainte|maximum|minimum|sans |avec |doit |éviter|vocabulaire|matériel|nombre de|pas plus de|au moins)/i.test(lower),
-      contexteClasse: /(élèves|classe de|groupe|effectif|besoins spécifiques)/i.test(lower)
-    };
+  function analyzePromptOcrcf(text) {
+    const trimmed = text.trim();
+    const lower = trimmed.toLowerCase();
+    const wordCount = trimmed.length ? trimmed.split(/\s+/).length : 0;
 
-    return { checks, wordCount };
+    const hasRole = ROLE_CUES.test(lower);
+    const hasFormat = FORMAT_CUES.test(lower);
+    const hasNiveau = NIVEAU_CUES.test(lower);
+    const hasClasse = CLASSE_CUES.test(lower);
+    const hasDuree = DUREE_CUES.test(lower);
+    const hasContrainteMot = CONTRAINTE_CUES.test(lower);
+    const hasObjectifVerbe = ACTION_VERBS.test(lower);
+
+    return [
+      {
+        letter: "O",
+        label: "Objectif",
+        present: wordCount >= 5,
+        whenPresent: hasObjectifVerbe
+          ? "Votre demande exprime une intention assez développée, avec un verbe d'action clair, pour orienter l'IA."
+          : "Votre demande est assez développée pour exprimer une intention, même sans verbe d'action explicite.",
+        whenAbsent: "Votre demande est très courte : quelques mots de plus suffiraient à préciser ce que vous attendez."
+      },
+      {
+        letter: "C",
+        label: "Contexte",
+        present: hasNiveau || hasClasse,
+        whenPresent: "Le niveau ou le profil de la classe est précisé : cela aide l'IA à calibrer sa réponse.",
+        whenAbsent: "Le niveau, l'âge ou le profil de la classe ne sont pas précisés."
+      },
+      {
+        letter: "R",
+        label: "Rôle",
+        present: hasRole,
+        whenPresent: "Vous proposez une posture à l'IA (un rôle) : cela oriente le ton et le niveau d'expertise de la réponse.",
+        whenAbsent: "Aucune posture n'est suggérée à l'IA, par exemple « agis comme… »."
+      },
+      {
+        letter: "C",
+        label: "Contraintes",
+        present: hasContrainteMot || hasDuree,
+        whenPresent: "Une contrainte ou une durée est indiquée : cela cadre la réponse attendue.",
+        whenAbsent: "Aucune contrainte claire (durée, matériel, longueur, vocabulaire…) n'est repérée."
+      },
+      {
+        letter: "F",
+        label: "Format",
+        present: hasFormat,
+        whenPresent: "Le format de réponse souhaité est assez clair.",
+        whenAbsent: "La forme attendue de la réponse (tableau, liste, texte court…) n'apparaît pas clairement."
+      }
+    ];
   }
 
-  function renderAnalysis(result) {
-    const { checks, wordCount } = result;
-    const box = $("#analysis-result");
-    box.hidden = false;
+  function renderOcrcfAnalysis(container, text) {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      container.innerHTML = `<p class="muted small">Écrivez ou collez un prompt avant de lancer l'analyse.</p>`;
+      container.hidden = false;
+      return;
+    }
 
-    const messages = {
-      niveau: {
-        found: "Vous indiquez un niveau ou un âge : l'IA peut mieux calibrer son vocabulaire et sa complexité.",
-        missing: "Vous pourriez préciser le niveau ou l'âge des élèves visés."
-      },
-      duree: {
-        found: "Une durée est mentionnée : cela aide à dimensionner l'activité.",
-        missing: "Aucune durée ne semble indiquée. Combien de temps voulez-vous y consacrer ?"
-      },
-      role: {
-        found: "Vous proposez une posture à l'IA (un rôle) : cela oriente le ton et le niveau d'expertise de la réponse.",
-        missing: "Vous pourriez suggérer une posture à l'IA, par exemple « agis comme… »."
-      },
-      format: {
-        found: "Le format de réponse souhaité est assez clair.",
-        missing: "Le format attendu (tableau, liste, texte court…) n'apparaît pas clairement."
-      },
-      contraintes: {
-        found: "Des contraintes ou conditions sont présentes : cela cadre la réponse.",
-        missing: "Aucune contrainte claire (matériel, longueur, vocabulaire…) n'est repérée."
-      },
-      contexteClasse: {
-        found: "Le contexte de classe (élèves, groupe…) est évoqué.",
-        missing: "Le contexte de classe (nombre d'élèves, profil du groupe) pourrait être précisé."
-      }
-    };
+    const results = analyzePromptOcrcf(text);
+    const wordCount = trimmed.split(/\s+/).length;
 
-    const foundItems = [];
-    const missingItems = [];
-    Object.keys(checks).forEach((key) => {
-      const target = checks[key] ? foundItems : missingItems;
-      target.push(messages[key][checks[key] ? "found" : "missing"]);
+    let listHtml = '<ul class="ocrcf-analysis-list">';
+    results.forEach((r) => {
+      const cls = r.present ? "found" : "missing";
+      const icon = r.present ? "✅" : "➕";
+      const msg = r.present ? r.whenPresent : r.whenAbsent;
+      listHtml += `<li class="${cls}"><span class="ocrcf-analysis-list__badge">${r.letter}</span><span><strong>${r.label}</strong><br>${icon} ${msg}</span></li>`;
     });
+    listHtml += "</ul>";
 
     let lengthNote = "";
-    if (wordCount === 0) {
-      lengthNote = "Le champ est vide pour l'instant : commencez par reformuler la demande de départ.";
-    } else if (wordCount < 8) {
+    if (wordCount < 8) {
       lengthNote = "Votre prompt est encore très court : quelques précisions supplémentaires pourraient l'enrichir.";
     } else {
       lengthNote = "Votre prompt est suffisamment développé pour donner du contexte à l'IA.";
     }
 
-    let html = `<p><strong>Ce que votre reformulation apporte déjà :</strong></p>`;
-    if (foundItems.length) {
-      html += "<ul>" + foundItems.map((m) => `<li class="found">✅ ${m}</li>`).join("") + "</ul>";
-    } else {
-      html += `<p class="muted small">Pour l'instant, peu d'éléments précis sont repérés — c'est un bon point de départ pour continuer.</p>`;
-    }
-
-    if (missingItems.length) {
-      html += `<p><strong>Ce que vous pourriez encore préciser :</strong></p>`;
-      html += "<ul>" + missingItems.map((m) => `<li class="missing">➕ ${m}</li>`).join("") + "</ul>";
-    } else {
-      html += `<p><strong>Votre reformulation couvre déjà tous les repères de la méthode O-C-R-C-F.</strong> Vous pouvez encore l'affiner selon votre sensibilité.</p>`;
-    }
-
+    let html = `<p><strong>Ce que repère l'analyse, section par section :</strong></p>`;
+    html += listHtml;
     html += `<p class="muted small">${lengthNote}</p>`;
-    html += `<p class="muted small">Cette analyse repère simplement des mots-clés : elle ne juge pas la qualité pédagogique de votre prompt, et il n'y a pas de « bonne note » à obtenir.</p>`;
+    html += `<p class="muted small">Cette analyse repère des indices de formulation (mots-clés, longueur) : elle ne juge pas la qualité pédagogique de votre prompt, et il n'y a pas de « bonne note » à obtenir.</p>`;
 
-    box.innerHTML = html;
+    container.innerHTML = html;
+    container.hidden = false;
   }
+
+  $("#btn-analyze-step3").addEventListener("click", () => {
+    renderOcrcfAnalysis($("#step3-analysis-result"), $("#field-final-prompt").value);
+  });
 
   $("#btn-analyze").addEventListener("click", () => {
     if (!state.challengeSelected) return;
-    const text = $("#field-challenge-answer").value;
-    const result = analyzePrompt(text);
-    renderAnalysis(result);
+    renderOcrcfAnalysis($("#analysis-result"), $("#field-challenge-answer").value);
+  });
+
+  $("#btn-analyze-step5").addEventListener("click", () => {
+    renderOcrcfAnalysis($("#step5-analysis-result"), state.finalPrompt || "");
   });
 
   /* ------------------------------------------------------------------ */
@@ -619,12 +646,61 @@
     ].join("\n");
   }
 
+  // Rendu Markdown minimal (titres ##, gras **texte**, listes à puces -) pour
+  // donner un aperçu visuel de la structure, en complément du texte brut modifiable.
+  function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function renderMiniMarkdown(text) {
+    const escaped = escapeHtml(text);
+    const lines = escaped.split("\n");
+    let html = "";
+    let inList = false;
+    lines.forEach((line) => {
+      const trimmed = line.trim();
+      if (/^##\s+/.test(trimmed)) {
+        if (inList) { html += "</ul>"; inList = false; }
+        html += `<h4>${trimmed.replace(/^##\s+/, "")}</h4>`;
+      } else if (/^-\s+/.test(trimmed)) {
+        if (!inList) { html += "<ul>"; inList = true; }
+        html += `<li>${trimmed.replace(/^-\s+/, "")}</li>`;
+      } else if (trimmed === "") {
+        if (inList) { html += "</ul>"; inList = false; }
+      } else {
+        if (inList) { html += "</ul>"; inList = false; }
+        html += `<p>${trimmed}</p>`;
+      }
+    });
+    if (inList) html += "</ul>";
+    return html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  }
+
   function renderStep5() {
     const display = $("#field-final-display");
+    const preview = $("#final-markdown-preview");
+    const previewLabel = $("#markdown-preview-label");
+    const analyzeBtn = $("#btn-analyze-step5");
+    const analysisBox = $("#step5-analysis-result");
     const hasPrompt = !!(state.finalPrompt && state.finalPrompt.trim());
+
     display.value = hasPrompt ? state.finalPrompt : "Vous n'avez pas encore généré de prompt. Retournez à l'étape 3 (« Construire ») pour le construire.";
     $("#btn-copy").disabled = !hasPrompt;
     $("#btn-download").disabled = !hasPrompt;
+    analyzeBtn.disabled = !hasPrompt;
+
+    // L'analyse et l'aperçu formaté datent potentiellement d'un prompt précédent : on les efface
+    // à chaque arrivée sur l'étape, l'utilisateur peut relancer l'analyse en un clic si besoin.
+    analysisBox.hidden = true;
+
+    if (hasPrompt) {
+      preview.innerHTML = renderMiniMarkdown(state.finalPrompt);
+      preview.hidden = false;
+      previewLabel.hidden = false;
+    } else {
+      preview.hidden = true;
+      previewLabel.hidden = true;
+    }
   }
 
   $("#btn-copy").addEventListener("click", async () => {
