@@ -149,20 +149,20 @@
       <h2 id="step-2-title">Observer une demande vague</h2>
       <p class="lead">Voici une consigne telle qu'un collègue pourrait la taper rapidement dans une IA :</p>
 
-      <blockquote class="prompt-sample">« Fais-moi une activité sur le climat. »</blockquote>
+      <blockquote class="prompt-sample">« Fais-moi une activité sur le changement climatique pour ma classe de 4e secondaire. J'aimerais qu'elle aide les élèves à comprendre les causes principales du phénomène. »</blockquote>
 
-      <p>Et voici, à titre d'exemple, le genre de réponse générale que l'on obtient souvent :</p>
+      <p>Cette demande précise déjà deux ou trois choses. Voici, à titre d'exemple, le genre de réponse que l'on obtient souvent : l'IA utilise ce qu'on lui a donné, et comble le reste par des choix génériques.</p>
 
       <div class="ai-bubble" aria-label="Exemple de réponse simulée d'une IA">
         <p class="ai-bubble__tag">Réponse simulée — pas une vraie IA</p>
-        <p>Voici une activité sur le climat :</p>
+        <p>Voici une activité sur le changement climatique, adaptée à des élèves de 4e secondaire et construite autour de la compréhension des causes principales du phénomène :</p>
         <ol>
-          <li>Introduction : expliquer ce qu'est le climat et le différencier de la météo.</li>
-          <li>Discussion : demander aux élèves ce qu'ils savent déjà du changement climatique.</li>
-          <li>Activité : les élèves réalisent une affiche ou un exposé sur le sujet.</li>
-          <li>Conclusion : synthèse collective en groupe classe.</li>
+          <li>Introduction : présentation des grandes causes du changement climatique (effet de serre, activités humaines…).</li>
+          <li>Activité : les élèves analysent un document ou une courte vidéo sur le sujet.</li>
+          <li>Mise en commun : discussion collective pour vérifier la compréhension des causes.</li>
+          <li>Conclusion : synthèse des points essentiels à retenir.</li>
         </ol>
-        <p>Cette activité peut être adaptée selon le niveau des élèves et le temps disponible.</p>
+        <p>Cette activité peut être organisée selon le temps dont vous disposez et adaptée avec les ressources disponibles dans votre classe.</p>
       </div>
 
       <fieldset class="missing-picker">
@@ -324,11 +324,24 @@
           <div class="builder-preview__box" id="live-preview" aria-live="polite">
             <p class="muted small">Votre prompt apparaîtra ici au fur et à mesure que vous complétez les sections.</p>
           </div>
-          <button type="button" class="btn btn--primary" id="btn-generate">Générer mon prompt complet</button>
+          <button type="button" class="btn btn--primary" id="btn-generate">Structurer en Markdown</button>
 
           <div class="builder-final">
             <label for="field-final-prompt" class="section-title section-title--small">Votre prompt final (modifiable)</label>
-            <textarea id="field-final-prompt" rows="8" placeholder="Cliquez sur « Générer mon prompt complet » pour commencer, puis modifiez-le librement."></textarea>
+            <textarea id="field-final-prompt" rows="8" placeholder="Cliquez sur « Structurer en Markdown » pour commencer, puis modifiez-le librement."></textarea>
+          </div>
+
+          <div class="markdown-info callout callout--info" role="note">
+            <span class="callout__icon" aria-hidden="true">✍️</span>
+            <div>
+              <p><strong>Pourquoi structurer en Markdown ?</strong> Le Markdown est une façon simple d'organiser un texte à l'aide de quelques symboles, sans mise en forme complexe. La plupart des IA génératives le reconnaissent et s'en servent pour mieux distinguer les parties de votre demande — cela peut rendre votre prompt plus lisible et la réponse mieux structurée.</p>
+              <ul class="markdown-examples">
+                <li><code>## Titre</code> → un titre de section, par exemple <code>## Objectif</code></li>
+                <li><code>**mot**</code> → un texte <strong>en gras</strong>, pour souligner un point important</li>
+                <li><code>- élément</code> → une liste à puces, utile pour des contraintes ou des étapes</li>
+              </ul>
+              <p class="muted small">Comme pour le reste de la méthode O-C-R-C-F, ce n'est pas une obligation : c'est un outil de clarté parmi d'autres, à utiliser si vous le trouvez utile.</p>
+            </div>
           </div>
         </aside>
       </div>
