@@ -5,6 +5,10 @@
    ========================================================================== */
 
 :root {
+  /* Palette fixe et volontairement unique (pas de variante sombre) :
+     on force le rendu clair des champs de formulaire pour éviter que le
+     navigateur les réinverse automatiquement en mode sombre système. */
+  color-scheme: light;
   --color-bg: #f6f8fa;
   --color-surface: #ffffff;
   --color-navy: #16233f;
@@ -26,6 +30,13 @@
 }
 
 * { box-sizing: border-box; }
+
+/* Filet de sécurité supplémentaire : tous les champs de formulaire gardent
+   un fond clair et un texte sombre, même si le système force un thème sombre. */
+textarea, input, select {
+  color: var(--color-text);
+  background-color: var(--color-surface);
+}
 
 html { scroll-behavior: smooth; }
 
@@ -268,6 +279,7 @@ main { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 2rem; }
   font-weight: 600;
 }
 
+.step__actions { margin: 1.5rem 0; }
 .step__actions--start { display: flex; justify-content: center; margin-top: 2rem; }
 
 /* ---------- Boutons ---------- */
@@ -551,3 +563,26 @@ main { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 2rem; }
   .bottom-nav__status { display: none; }
   .bottom-nav .btn { flex: 1; }
 }
+
+/* ---------- Boîte de dialogue de confirmation ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 35, 63, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 100;
+}
+.modal-overlay[hidden] { display: none; }
+.modal-box {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1.5rem;
+  max-width: 420px;
+  width: 100%;
+}
+.modal-box p { margin: 0 0 1.2rem; color: var(--color-text); font-size: 1rem; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 0.7rem; flex-wrap: wrap; }

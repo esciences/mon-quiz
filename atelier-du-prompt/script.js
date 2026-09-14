@@ -18,6 +18,7 @@
     maxStepReached: 1,
     situation: null,
     missingChecks: {},
+    missingVerified: false,
     fields: {
       objectif: "",
       contexte: "",
@@ -71,6 +72,44 @@
 
   const $ = (sel, ctx) => (ctx || document).querySelector(sel);
   const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
+
+  // Boîte de dialogue de confirmation maison : plus fiable que window.confirm()
+  // (que certains contextes embarqués bloquent silencieusement) et mieux intégrée
+  // visuellement. Retourne une promesse résolue à true (confirmé) ou false (annulé).
+  function showConfirm(message, options) {
+    options = options || {};
+    return new Promise((resolve) => {
+      const overlay = $("#modal-overlay");
+      const msgEl = $("#modal-message");
+      const confirmBtn = $("#modal-confirm");
+      const cancelBtn = $("#modal-cancel");
+      msgEl.textContent = message;
+      confirmBtn.textContent = options.confirmLabel || "Confirmer";
+      cancelBtn.textContent = options.cancelLabel || "Annuler";
+      overlay.hidden = false;
+      const previouslyFocused = document.activeElement;
+      confirmBtn.focus();
+
+      function cleanup(result) {
+        overlay.hidden = true;
+        confirmBtn.removeEventListener("click", onConfirm);
+        cancelBtn.removeEventListener("click", onCancel);
+        overlay.removeEventListener("click", onOverlayClick);
+        document.removeEventListener("keydown", onKeydown);
+        if (previouslyFocused && typeof previouslyFocused.focus === "function") previouslyFocused.focus();
+        resolve(result);
+      }
+      function onConfirm() { cleanup(true); }
+      function onCancel() { cleanup(false); }
+      function onOverlayClick(e) { if (e.target === overlay) cleanup(false); }
+      function onKeydown(e) { if (e.key === "Escape") cleanup(false); }
+
+      confirmBtn.addEventListener("click", onConfirm);
+      cancelBtn.addEventListener("click", onCancel);
+      overlay.addEventListener("click", onOverlayClick);
+      document.addEventListener("keydown", onKeydown);
+    });
+  }
 
   // Navigation au clavier (flèches) pour les groupes de boutons role="radiogroup".
   function enableRadiogroupArrowKeys(container) {
@@ -189,24 +228,65 @@
   /* ------------------------------------------------------------------ */
 
   const missingCheckboxes = $$(".missing-checkbox");
+
+  const missingItemsInfo = {
+    niveau: "le niveau scolaire — sans lui, l'IA propose une activité « passe-partout », parfois trop simple ou trop complexe pour votre classe.",
+    duree: "la durée — sans elle, difficile de savoir si l'activité tient en 50 minutes ou nécessite deux séances.",
+    objectifs: "les objectifs d'apprentissage — sans eux, l'activité risque de rester superficielle ou de ne viser aucune compétence précise.",
+    contexte: "le contexte de classe — le nombre d'élèves, leur profil ou le matériel disponible influencent fortement ce qui est réalisable.",
+    contraintes: "des contraintes — sans elles (matériel, vocabulaire, démarche), la proposition peut être difficile à mettre en œuvre telle quelle.",
+    format: "le format souhaité — sans lui, vous recevez souvent un texte continu là où un tableau ou une liste d'étapes serait plus pratique."
+  };
+
   missingCheckboxes.forEach((box) => {
     box.addEventListener("change", () => {
       const key = box.dataset.missing;
       state.missingChecks[key] = box.checked;
-      const hint = $(`[data-hint-for="${key}"]`);
-      if (hint) hint.hidden = !box.checked;
+      // Une nouvelle case cochée invalide la vérification précédente : on invite à revérifier.
+      state.missingVerified = false;
+      $("#missing-result").hidden = true;
       saveState();
     });
   });
 
+  function renderMissingVerification() {
+    const checkedKeys = [];
+    const uncheckedKeys = [];
+    missingCheckboxes.forEach((box) => {
+      (box.checked ? checkedKeys : uncheckedKeys).push(box.dataset.missing);
+    });
+
+    let html = "";
+    if (checkedKeys.length) {
+      html += `<p><strong>Vous avez identifié :</strong></p><ul>${checkedKeys.map((k) => `<li class="found">✅ ${missingItemsInfo[k]}</li>`).join("")}</ul>`;
+    } else {
+      html += `<p class="muted small">Vous n'avez encore rien coché. Essayez d'en sélectionner quelques-uns, puis vérifiez à nouveau.</p>`;
+    }
+    if (uncheckedKeys.length) {
+      html += `<p><strong>Vous pourriez aussi considérer :</strong></p><ul>${uncheckedKeys.map((k) => `<li class="missing">➕ ${missingItemsInfo[k]}</li>`).join("")}</ul>`;
+    }
+    html += `<p class="muted small">Il n'existe pas une seule bonne réponse : ces six éléments sont tous pertinents pour préciser cette demande.</p>`;
+
+    const box = $("#missing-result");
+    box.innerHTML = html;
+    box.hidden = false;
+  }
+
+  $("#btn-check-missing").addEventListener("click", () => {
+    state.missingVerified = true;
+    saveState();
+    renderMissingVerification();
+  });
+
   function restoreStep2() {
     missingCheckboxes.forEach((box) => {
-      const key = box.dataset.missing;
-      const checked = !!state.missingChecks[key];
-      box.checked = checked;
-      const hint = $(`[data-hint-for="${key}"]`);
-      if (hint) hint.hidden = !checked;
+      box.checked = !!state.missingChecks[box.dataset.missing];
     });
+    if (state.missingVerified) {
+      renderMissingVerification();
+    } else {
+      $("#missing-result").hidden = true;
+    }
   }
 
   /* ------------------------------------------------------------------ */
@@ -279,15 +359,16 @@
     preview.textContent = text;
   }
 
-  $("#btn-generate").addEventListener("click", () => {
+  $("#btn-generate").addEventListener("click", async () => {
     const text = buildPromptFromFields(state.fields);
     const finalField = $("#field-final-prompt");
 
     if (state.finalPromptGenerated && finalField.value.trim() && finalField.value.trim() !== state.finalPrompt.trim()) {
-      const confirmOverwrite = window.confirm(
-        "Vous avez déjà modifié votre prompt final. Voulez-vous vraiment le remplacer par un nouveau prompt généré à partir des cinq sections ?"
+      const confirmed = await showConfirm(
+        "Vous avez déjà modifié votre prompt final. Voulez-vous vraiment le remplacer par un nouveau prompt généré à partir des cinq sections ?",
+        { confirmLabel: "Remplacer", cancelLabel: "Garder mon texte" }
       );
-      if (!confirmOverwrite) return;
+      if (!confirmed) return;
     }
 
     finalField.value = text || "Complétez au moins une section ci-dessus pour générer votre prompt.";
@@ -302,11 +383,15 @@
     saveState();
   });
 
-  $("#btn-fill-example").addEventListener("click", () => {
-    const confirmFill = state.fields.objectif || state.fields.contexte || state.fields.role || state.fields.contraintes || state.fields.format
-      ? window.confirm("Remplir l'exemple effacera le contenu actuel des cinq sections. Continuer ?")
-      : true;
-    if (!confirmFill) return;
+  $("#btn-fill-example").addEventListener("click", async () => {
+    const hasContent = state.fields.objectif || state.fields.contexte || state.fields.role || state.fields.contraintes || state.fields.format;
+    if (hasContent) {
+      const confirmed = await showConfirm(
+        "Remplir l'exemple effacera le contenu actuel des cinq sections. Continuer ?",
+        { confirmLabel: "Remplacer par l'exemple", cancelLabel: "Annuler" }
+      );
+      if (!confirmed) return;
+    }
 
     Object.keys(fieldIds).forEach((key) => {
       state.fields[key] = exampleCompletee[key];
@@ -538,11 +623,12 @@
     URL.revokeObjectURL(url);
   });
 
-  $("#btn-restart").addEventListener("click", () => {
-    const confirmReset = window.confirm(
-      "Voulez-vous vraiment recommencer ? Toutes vos réponses seront effacées et vous reviendrez à la première étape."
+  $("#btn-restart").addEventListener("click", async () => {
+    const confirmed = await showConfirm(
+      "Voulez-vous vraiment recommencer ? Toutes vos réponses seront effacées et vous reviendrez à la première étape.",
+      { confirmLabel: "Recommencer", cancelLabel: "Annuler" }
     );
-    if (!confirmReset) return;
+    if (!confirmed) return;
     try {
       window.localStorage.removeItem(STORAGE_KEY);
     } catch (err) {

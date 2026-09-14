@@ -167,14 +167,13 @@
 
       <fieldset class="missing-picker">
         <legend class="section-title">D'après vous, qu'est-ce qui manque à cette demande ?</legend>
-        <p class="muted small">Cochez les éléments qui vous semblent absents. Un petit commentaire s'affichera à chaque fois.</p>
+        <p class="muted small">Cochez les éléments qui vous semblent absents, puis cliquez sur « Vérifier mes réponses » pour obtenir une explication.</p>
 
         <div class="missing-item">
           <label class="missing-item__label">
             <input type="checkbox" class="missing-checkbox" data-missing="niveau">
             <span>Le niveau scolaire</span>
           </label>
-          <p class="missing-item__hint" data-hint-for="niveau" hidden>Sans niveau précisé, l'IA propose une activité « passe-partout », parfois trop simple ou trop complexe pour votre classe.</p>
         </div>
 
         <div class="missing-item">
@@ -182,7 +181,6 @@
             <input type="checkbox" class="missing-checkbox" data-missing="duree">
             <span>La durée</span>
           </label>
-          <p class="missing-item__hint" data-hint-for="duree" hidden>Sans indication de durée, difficile de savoir si l'activité tient en 50 minutes ou nécessite deux séances.</p>
         </div>
 
         <div class="missing-item">
@@ -190,7 +188,6 @@
             <input type="checkbox" class="missing-checkbox" data-missing="objectifs">
             <span>Les objectifs d'apprentissage</span>
           </label>
-          <p class="missing-item__hint" data-hint-for="objectifs" hidden>Sans objectif clair, l'activité risque de rester superficielle ou de ne viser aucune compétence précise.</p>
         </div>
 
         <div class="missing-item">
@@ -198,7 +195,6 @@
             <input type="checkbox" class="missing-checkbox" data-missing="contexte">
             <span>Le contexte de classe</span>
           </label>
-          <p class="missing-item__hint" data-hint-for="contexte" hidden>Le nombre d'élèves, leur profil ou le matériel disponible influencent fortement ce qui est réalisable en classe.</p>
         </div>
 
         <div class="missing-item">
@@ -206,7 +202,6 @@
             <input type="checkbox" class="missing-checkbox" data-missing="contraintes">
             <span>Des contraintes</span>
           </label>
-          <p class="missing-item__hint" data-hint-for="contraintes" hidden>Sans contraintes (matériel, vocabulaire, démarche), la proposition peut être difficile à mettre en œuvre telle quelle.</p>
         </div>
 
         <div class="missing-item">
@@ -214,9 +209,14 @@
             <input type="checkbox" class="missing-checkbox" data-missing="format">
             <span>Le format souhaité</span>
           </label>
-          <p class="missing-item__hint" data-hint-for="format" hidden>Sans format précisé, vous recevez souvent un texte continu là où un tableau ou une liste d'étapes serait plus pratique.</p>
         </div>
       </fieldset>
+
+      <div class="step__actions">
+        <button type="button" class="btn btn--primary" id="btn-check-missing">Vérifier mes réponses</button>
+      </div>
+
+      <div class="analysis-result" id="missing-result" aria-live="polite" hidden></div>
 
       <div class="callout callout--info" role="note">
         <span class="callout__icon" aria-hidden="true">💡</span>
@@ -432,6 +432,16 @@
   <button type="button" class="btn btn--secondary" id="btn-prev">← Précédent</button>
   <span class="bottom-nav__status" id="bottom-nav-status">Étape 1 sur 5</span>
   <button type="button" class="btn btn--primary" id="btn-next">Suivant →</button>
+</div>
+
+<div class="modal-overlay" id="modal-overlay" hidden>
+  <div class="modal-box" role="alertdialog" aria-modal="true" aria-labelledby="modal-message">
+    <p id="modal-message"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn--secondary" id="modal-cancel">Annuler</button>
+      <button type="button" class="btn btn--primary" id="modal-confirm">Confirmer</button>
+    </div>
+  </div>
 </div>
 
 <script src="script.js"></script>
